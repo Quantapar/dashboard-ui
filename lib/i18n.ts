@@ -1,0 +1,86 @@
+export type Lang = "en" | "ar";
+
+export const dict = {
+  en: {
+    dashboard: "Dashboard",
+    overview: "Overview",
+    recentOrders: "Recent Orders",
+    entries: "entries",
+    all: "All",
+    filterByStatus: "Filter by status",
+    selectPeriod: "Select time period",
+    periods: {
+      last7Days: "7 Days",
+      last30Days: "30 Days",
+      last90Days: "90 Days",
+      last12Months: "12 Months",
+    },
+    vsLastMonth: "vs last month",
+    increasedBy: "Increased by",
+    decreasedBy: "Decreased by",
+    switchLanguage: "Switch to Arabic",
+    columns: {
+      orderId: "Order ID",
+      customer: "Customer",
+      amount: "Amount",
+      status: "Status",
+    },
+    stats: {
+      revenue: "Revenue",
+      netProfit: "Net Profit",
+      orders: "Orders",
+      confirmRate: "Confirm Rate",
+      returnRate: "Return Rate",
+      deliveryRate: "Delivery Rate",
+    },
+    statuses: {
+      New: "New",
+      Processing: "Processing",
+      Shipped: "Shipped",
+      Done: "Done",
+      Return: "Return",
+    },
+  },
+  ar: {
+    dashboard: "لوحة التحكم",
+    overview: "نظرة عامة",
+    recentOrders: "أحدث الطلبات",
+    entries: "سجل",
+    all: "الكل",
+    filterByStatus: "تصفية حسب الحالة",
+    selectPeriod: "اختر الفترة الزمنية",
+    periods: {
+      last7Days: "7 أيام",
+      last30Days: "30 يوم",
+      last90Days: "90 يوم",
+      last12Months: "12 شهر",
+    },
+    vsLastMonth: "مقارنة بالشهر السابق",
+    increasedBy: "زاد بنسبة",
+    decreasedBy: "انخفض بنسبة",
+    switchLanguage: "التبديل إلى الإنجليزية",
+    columns: {
+      orderId: "رقم الطلب",
+      customer: "العميل",
+      amount: "المبلغ",
+      status: "الحالة",
+    },
+    stats: {
+      revenue: "الإيرادات",
+      netProfit: "صافي الربح",
+      orders: "الطلبات",
+      confirmRate: "معدل التأكيد",
+      returnRate: "معدل الإرجاع",
+      deliveryRate: "معدل التسليم",
+    },
+    statuses: {
+      New: "جديد",
+      Processing: "قيد المعالجة",
+      Shipped: "تم الشحن",
+      Done: "مكتمل",
+      Return: "مرتجع",
+    },
+  },
+} as const satisfies Record<Lang, unknown>;
+
+export type Dict = (typeof dict)[Lang];

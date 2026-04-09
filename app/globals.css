@@ -1,26 +1,223 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Surfaces */
+  --bg: #0f0f0e;
+  --surface: #141413;
+  --surface-hover: #181816;
+
+  /* Borders — hairline, almost invisible */
+  --border: rgba(255, 255, 255, 0.06);
+  --border-strong: rgba(255, 255, 255, 0.10);
+
+  /* Text */
+  --fg: #f5f5f4;
+  --muted: rgba(245, 245, 244, 0.52);
+  --dim: rgba(245, 245, 244, 0.32);
+  --faint: rgba(245, 245, 244, 0.18);
+
+  /* Signature accent — warm gold, used sparingly */
+  --accent: #f5c97f;
+  --accent-dim: rgba(245, 201, 127, 0.32);
+
+  /* Trend accents — muted, not vibrant */
+  --positive: #86efac;
+  --negative: #fca5a5;
+
+  /* Status palette — editorial, distinct but not Tailwind defaults.
+     Each color has personality without being garish. Used as both
+     the dot color and (at very low opacity) the cell background tint. */
+  --status-new: #94a3b8;        /* cool platinum — neutral start */
+  --status-processing: #d4a574; /* warm honey — in progress */
+  --status-shipped: #7eb8b8;    /* sea glass — in transit */
+  --status-done: #8aab7e;       /* matcha sage — complete */
+  --status-return: #c4928e;     /* terracotta — returned */
+
+  /* Easing — strong curves per Emil */
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-hover: var(--surface-hover);
+  --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
+  --color-fg: var(--fg);
+  --color-muted: var(--muted);
+  --color-dim: var(--dim);
+  --color-faint: var(--faint);
+  --color-accent: var(--accent);
+  --color-accent-dim: var(--accent-dim);
+  --color-positive: var(--positive);
+  --color-negative: var(--negative);
+  --color-status-new: var(--status-new);
+  --color-status-processing: var(--status-processing);
+  --color-status-shipped: var(--status-shipped);
+  --color-status-done: var(--status-done);
+  --color-status-return: var(--status-return);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+
+  /* Type scale — 6 sizes total. Override Tailwind defaults. */
+  --text-2xs: 10px;
+  --text-2xs--line-height: 14px;
+  --text-xs: 11px;
+  --text-xs--line-height: 16px;
+  --text-sm: 13px;
+  --text-sm--line-height: 18px;
+  --text-base: 15px;
+  --text-base--line-height: 22px;
+  --text-2xl: 24px;
+  --text-2xl--line-height: 30px;
+  --text-4xl: 34px;
+  --text-4xl--line-height: 38px;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  color-scheme: dark;
+}
+
+html,
+body {
+  background: var(--bg);
+  color: var(--fg);
+}
+
+/* Buttons: smooth taps, no flash, no double-tap delay, pointer cursor */
+button,
+[role="button"] {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+button:not(:disabled),
+[role="button"]:not([aria-disabled="true"]) {
+  cursor: pointer;
+}
+
+/* Headings: prevent orphan words */
+h1,
+h2,
+h3 {
+  text-wrap: balance;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-geist-sans), system-ui, -apple-system, sans-serif;
+  font-synthesis: none;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* RTL — Arabic font + neutralize Latin-only typography */
+[dir="rtl"] {
+  font-family: var(--font-arabic), var(--font-geist-sans), system-ui, sans-serif;
+  /* Letter-spacing breaks Arabic ligatures — disable globally in RTL */
+  letter-spacing: normal;
+  /* Arabic has no concept of case */
+  text-transform: none;
+}
+
+/* Numbers + currency stay LTR even inside RTL context to preserve digit order */
+[dir="rtl"] .tabular {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum";
+}
+
+/* Tabular numerals — non-negotiable for dashboard data */
+.tabular {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum";
+}
+
+/* Card elevation — subtle, follows the "no heavy shadows" rule.
+   Three layers: inset top highlight (lit from above), close lift, ambient spread.
+   Total visual weight is restrained — depth without drama. */
+.card-elevated {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.025), transparent 40%),
+    var(--surface);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.04),
+    0 1px 2px rgba(0, 0, 0, 0.25),
+    0 8px 24px rgba(0, 0, 0, 0.18);
+}
+
+/* Type scale tokens (defined in @theme inline above):
+   text-2xs (10px) → table column headers
+   text-xs  (11px) → controls, labels, badges, micro-text
+   text-sm  (13px) → body text, table cells, subtitles
+   text-base (15px) → section headings
+   text-2xl (24px) → page title
+   text-4xl (34px) → hero stat values */
+
+/* Sparkbar mirrors in RTL so the highlighted "today" bar always sits at the
+   reading-direction end of the row. */
+[dir="rtl"] .sparkbar {
+  transform: scaleX(-1);
+}
+
+/* Mount animations — pure CSS, runs off main thread */
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.anim-fade-up {
+  opacity: 0;
+  animation: fade-up 480ms var(--ease-out) forwards;
+}
+
+.anim-fade-in {
+  opacity: 0;
+  animation: fade-in 360ms var(--ease-out) forwards;
+}
+
+/* Selection — restrained */
+::selection {
+  background: rgba(245, 245, 244, 0.12);
+  color: var(--fg);
+}
+
+/* Scrollbar — barely visible */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
 }
