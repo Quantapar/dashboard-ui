@@ -6,6 +6,8 @@ import { useLang } from "./lang-provider";
 import { StatusBadge } from "./status-badge";
 
 type Filter = "all" | OrderStatus;
+type SortKey = "orderId" | "customer" | "amount";
+type SortDir = "asc" | "desc";
 
 const filters: Filter[] = [
   "all",
@@ -16,10 +18,36 @@ const filters: Filter[] = [
   "Return",
 ];
 
+const parseAmount = (s: string) => parseFloat(s.replace(/[$,]/g, ""));
+
+function SortArrow({ active, dir }: { active: boolean; dir: SortDir }) {
+  if (!active) return null;
+  return (
+    <svg
+      width="10"
+      height="10"
+      viewBox="0 0 10 10"
+      fill="none"
+      aria-hidden
+      className="shrink-0"
+    >
+      <path
+        d={dir === "asc" ? "M2.5 6L5 3.5L7.5 6" : "M2.5 4L5 6.5L7.5 4"}
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
 export function OrdersTable() {
   const { t } = useLang();
   const [filter, setFilter] = useState<Filter>("all");
-  // Animate rows ONCE on initial mount. After that, filter changes
+  const [sortKey, setSortKey] = useState<SortKey | null>(null);
+  const [sortDir, setSortDir] = useState<SortDir>("asc");
+  // Animate rows ONCE on initial mount. After that, filter/sort changes
   // are instant snaps — otherwise React's reconciliation makes the
   // surviving rows appear "before" the new ones, which looks broken.
   const [animateRows, setAnimateRows] = useState(true);
@@ -34,8 +62,46 @@ export function OrdersTable() {
     setFilter(f);
   };
 
+  const handleSort = (key: SortKey) => {
+    setAnimateRows(false);
+    if (sortKey === key) {
+      setSortDir((d) => (d === "asc" ? "desc" : "asc"));
+    } else {
+      setSortKey(key);
+      setSortDir("asc");
+    }
+  };
+
   const filteredOrders =
     filter === "all" ? orders : orders.filter((o) => o.status === filter);
+
+  const sortedOrders = sortKey
+    ? [...filteredOrders].sort((a, b) => {
+        let aVal: string | number;
+        let bVal: string | number;
+        if (sortKey === "amount") {
+          aVal = parseAmount(a.amount);
+          bVal = parseAmount(b.amount);
+        } else if (sortKey === "orderId") {
+          aVal = a.id;
+          bVal = b.id;
+        } else {
+          aVal = a.customer;
+          bVal = b.customer;
+        }
+        if (aVal < bVal) return sortDir === "asc" ? -1 : 1;
+        if (aVal > bVal) return sortDir === "asc" ? 1 : -1;
+        return 0;
+      })
+    : filteredOrders;
+
+  const ariaSortFor = (key: SortKey): "ascending" | "descending" | "none" =>
+    sortKey === key ? (sortDir === "asc" ? "ascending" : "descending") : "none";
+
+  const sortBtnClass = (key: SortKey) =>
+    `inline-flex items-center gap-1.5 outline-none transition-colors duration-150 ${
+      sortKey === key ? "text-fg" : "hover:text-muted"
+    }`;
 
   return (
     <section className="anim-fade-up" style={{ animationDelay: "300ms" }}>
@@ -85,21 +151,48 @@ export function OrdersTable() {
             <tr className="border-border border-b">
               <th
                 scope="col"
+                aria-sort={ariaSortFor("orderId")}
                 className="hidden sm:table-cell text-dim text-start px-3 sm:px-6 py-3 text-2xs font-medium uppercase tracking-[0.12em]"
               >
-                {t.columns.orderId}
+                <button
+                  type="button"
+                  onClick={() => handleSort("orderId")}
+                  className={sortBtnClass("orderId")}
+                  style={{ transitionTimingFunction: "var(--ease-out)" }}
+                >
+                  {t.columns.orderId}
+                  <SortArrow active={sortKey === "orderId"} dir={sortDir} />
+                </button>
               </th>
               <th
                 scope="col"
+                aria-sort={ariaSortFor("customer")}
                 className="text-dim text-start px-3 sm:px-6 py-3 text-2xs font-medium uppercase tracking-[0.12em]"
               >
-                {t.columns.customer}
+                <button
+                  type="button"
+                  onClick={() => handleSort("customer")}
+                  className={sortBtnClass("customer")}
+                  style={{ transitionTimingFunction: "var(--ease-out)" }}
+                >
+                  {t.columns.customer}
+                  <SortArrow active={sortKey === "customer"} dir={sortDir} />
+                </button>
               </th>
               <th
                 scope="col"
+                aria-sort={ariaSortFor("amount")}
                 className="text-dim text-end px-3 sm:px-6 py-3 text-2xs font-medium uppercase tracking-[0.12em]"
               >
-                {t.columns.amount}
+                <button
+                  type="button"
+                  onClick={() => handleSort("amount")}
+                  className={sortBtnClass("amount")}
+                  style={{ transitionTimingFunction: "var(--ease-out)" }}
+                >
+                  {t.columns.amount}
+                  <SortArrow active={sortKey === "amount"} dir={sortDir} />
+                </button>
               </th>
               <th
                 scope="col"
@@ -110,7 +203,7 @@ export function OrdersTable() {
             </tr>
           </thead>
           <tbody>
-            {filteredOrders.map((order, i) => (
+            {sortedOrders.map((order, i) => (
               <tr
                 key={order.id}
                 className={`border-border/60 hover:bg-surface-hover group cursor-pointer border-b transition-colors duration-150 last:border-b-0 ${animateRows ? "anim-fade-in" : ""}`}
