@@ -138,7 +138,9 @@ export function Sidebar() {
               <ChevronIcon />
             </span>
           </span>
-          <span className={`text-xs font-medium ${labelClass}`}>Collapse</span>
+          <span className={`text-xs font-medium ${labelClass}`}>
+            {expanded ? t.collapse : t.expand}
+          </span>
         </button>
 
         {/* Nav items */}
