@@ -99,7 +99,7 @@ export function OrdersTable() {
     sortKey === key ? (sortDir === "asc" ? "ascending" : "descending") : "none";
 
   const sortBtnClass = (key: SortKey) =>
-    `inline-flex items-center gap-1.5 outline-none transition-colors duration-150 ${
+    `inline-flex items-center gap-1.5 uppercase tracking-[0.12em] outline-none transition-colors duration-150 ${
       sortKey === key ? "text-fg" : "hover:text-muted"
     }`;
 
@@ -145,10 +145,10 @@ export function OrdersTable() {
       </div>
 
       <div className="card-elevated border-border h-[440px] sm:h-[560px] overflow-hidden rounded-lg border">
-        <div className="h-full overflow-y-auto">
+        <div className="bg-surface h-full overflow-y-auto">
         <table className="w-full border-collapse" aria-label={t.recentOrders}>
-          <thead className="bg-surface sticky top-0 z-10">
-            <tr className="border-border border-b">
+          <thead className="bg-bg sticky top-0 z-10">
+            <tr className="border-b border-white/[0.10]">
               <th
                 scope="col"
                 aria-sort={ariaSortFor("orderId")}

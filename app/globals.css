@@ -160,6 +160,15 @@ body {
   transform: scaleX(-1);
 }
 
+/* Sidebar chevron points "outward" in both directions: right in LTR
+   (sidebar on left), left in RTL (sidebar on right). */
+[dir="rtl"] .chevron-flip {
+  transform: scaleX(-1);
+}
+[dir="rtl"] .chevron-flip.rotate-180 {
+  transform: scaleX(-1) rotate(180deg);
+}
+
 /* Mount animations — pure CSS, runs off main thread */
 @keyframes fade-up {
   from {
