@@ -39,13 +39,15 @@ function WalletIcon() {
 function SettingsIcon() {
   return (
     <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden>
-      <circle cx="9" cy="9" r="2.5" stroke="currentColor" strokeWidth="1.5" />
       <path
-        d="M9 1.5v2 M9 14.5v2 M1.5 9h2 M14.5 9h2 M3.5 3.5l1.4 1.4 M13.1 13.1l1.4 1.4 M3.5 14.5l1.4-1.4 M13.1 4.9l1.4-1.4"
+        d="M2 5h4m4 0h6 M2 9h8m4 0h2 M2 13h2m4 0h8"
         stroke="currentColor"
         strokeWidth="1.5"
         strokeLinecap="round"
       />
+      <circle cx="8" cy="5" r="1.5" stroke="currentColor" strokeWidth="1.5" />
+      <circle cx="12" cy="9" r="1.5" stroke="currentColor" strokeWidth="1.5" />
+      <circle cx="5" cy="13" r="1.5" stroke="currentColor" strokeWidth="1.5" />
     </svg>
   );
 }
