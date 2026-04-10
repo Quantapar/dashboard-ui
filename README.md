@@ -4,7 +4,7 @@ Dark, minimal dashboard overview page with Arabic RTL support.
 
 ## Stack
 
-Next.js 16, React 19, TypeScript, Tailwind v4. No component libraries, no chart libraries, no icon libraries.
+Next.js 16, React 19, TypeScript, Tailwind v4.
 
 ## Run
 
