@@ -47,9 +47,6 @@ export function OrdersTable() {
   const [filter, setFilter] = useState<Filter>("all");
   const [sortKey, setSortKey] = useState<SortKey | null>(null);
   const [sortDir, setSortDir] = useState<SortDir>("asc");
-  // Animate rows ONCE on initial mount. After that, filter/sort changes
-  // are instant snaps — otherwise React's reconciliation makes the
-  // surviving rows appear "before" the new ones, which looks broken.
   const [animateRows, setAnimateRows] = useState(true);
 
   useEffect(() => {
@@ -95,13 +92,8 @@ export function OrdersTable() {
       })
     : filteredOrders;
 
-  const ariaSortFor = (key: SortKey): "ascending" | "descending" | "none" =>
-    sortKey === key ? (sortDir === "asc" ? "ascending" : "descending") : "none";
-
-  const sortBtnClass = (key: SortKey) =>
-    `inline-flex items-center gap-1.5 uppercase tracking-[0.12em] outline-none transition-colors duration-150 ${
-      sortKey === key ? "text-fg" : "hover:text-muted"
-    }`;
+  const thBase =
+    "text-dim px-3 sm:px-6 py-3 text-2xs font-medium uppercase tracking-[0.12em]";
 
   return (
     <section className="anim-fade-up" style={{ animationDelay: "300ms" }}>
@@ -145,59 +137,41 @@ export function OrdersTable() {
       </div>
 
       <div className="card-elevated border-border h-[440px] sm:h-[560px] overflow-hidden rounded-lg border">
-        <div className="bg-surface h-full overflow-y-auto">
+        <div className="h-full overflow-y-auto scroll-thin">
         <table className="w-full border-collapse" aria-label={t.recentOrders}>
-          <thead className="bg-bg sticky top-0 z-10">
-            <tr className="border-b border-white/[0.10]">
-              <th
-                scope="col"
-                aria-sort={ariaSortFor("orderId")}
-                className="hidden sm:table-cell text-dim text-start px-3 sm:px-6 py-3 text-2xs font-medium uppercase tracking-[0.12em]"
-              >
+          <thead className="bg-surface sticky top-0 z-10">
+            <tr className="border-border border-b">
+              <th scope="col" className={`hidden sm:table-cell ${thBase} text-start`}>
                 <button
                   type="button"
                   onClick={() => handleSort("orderId")}
-                  className={sortBtnClass("orderId")}
-                  style={{ transitionTimingFunction: "var(--ease-out)" }}
+                  className={`inline-flex items-center gap-1.5 uppercase tracking-[0.12em] outline-none transition-colors duration-150 ${sortKey === "orderId" ? "text-fg" : "hover:text-muted"}`}
                 >
                   {t.columns.orderId}
                   <SortArrow active={sortKey === "orderId"} dir={sortDir} />
                 </button>
               </th>
-              <th
-                scope="col"
-                aria-sort={ariaSortFor("customer")}
-                className="text-dim text-start px-3 sm:px-6 py-3 text-2xs font-medium uppercase tracking-[0.12em]"
-              >
+              <th scope="col" className={`${thBase} text-start`}>
                 <button
                   type="button"
                   onClick={() => handleSort("customer")}
-                  className={sortBtnClass("customer")}
-                  style={{ transitionTimingFunction: "var(--ease-out)" }}
+                  className={`inline-flex items-center gap-1.5 uppercase tracking-[0.12em] outline-none transition-colors duration-150 ${sortKey === "customer" ? "text-fg" : "hover:text-muted"}`}
                 >
                   {t.columns.customer}
                   <SortArrow active={sortKey === "customer"} dir={sortDir} />
                 </button>
               </th>
-              <th
-                scope="col"
-                aria-sort={ariaSortFor("amount")}
-                className="text-dim text-end px-3 sm:px-6 py-3 text-2xs font-medium uppercase tracking-[0.12em]"
-              >
+              <th scope="col" className={`${thBase} text-end`}>
                 <button
                   type="button"
                   onClick={() => handleSort("amount")}
-                  className={sortBtnClass("amount")}
-                  style={{ transitionTimingFunction: "var(--ease-out)" }}
+                  className={`inline-flex items-center gap-1.5 uppercase tracking-[0.12em] outline-none transition-colors duration-150 ${sortKey === "amount" ? "text-fg" : "hover:text-muted"}`}
                 >
                   {t.columns.amount}
                   <SortArrow active={sortKey === "amount"} dir={sortDir} />
                 </button>
               </th>
-              <th
-                scope="col"
-                className="text-dim text-start px-3 sm:px-6 py-3 text-2xs font-medium uppercase tracking-[0.12em]"
-              >
+              <th scope="col" className={`${thBase} text-start`}>
                 {t.columns.status}
               </th>
             </tr>
