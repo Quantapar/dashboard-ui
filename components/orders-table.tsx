@@ -20,23 +20,33 @@ const filters: Filter[] = [
 
 const parseAmount = (s: string) => parseFloat(s.replace(/[$,]/g, ""));
 
-function SortArrow({ active, dir }: { active: boolean; dir: SortDir }) {
-  if (!active) return null;
+function SortIcon({ active, dir }: { active: boolean; dir: SortDir }) {
   return (
     <svg
-      width="10"
-      height="10"
-      viewBox="0 0 10 10"
+      width="12"
+      height="16"
+      viewBox="0 0 12 16"
       fill="none"
       aria-hidden
       className="shrink-0"
     >
+      {/* Up arrow */}
       <path
-        d={dir === "asc" ? "M2.5 6L5 3.5L7.5 6" : "M2.5 4L5 6.5L7.5 4"}
+        d="M2 6.5L6 2.5L10 6.5"
         stroke="currentColor"
         strokeWidth="1.5"
         strokeLinecap="round"
         strokeLinejoin="round"
+        opacity={active && dir === "asc" ? 1 : 0.4}
+      />
+      {/* Down arrow */}
+      <path
+        d="M2 9.5L6 13.5L10 9.5"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        opacity={active && dir === "desc" ? 1 : 0.4}
       />
     </svg>
   );
@@ -148,7 +158,7 @@ export function OrdersTable() {
                   className={`inline-flex items-center gap-1.5 uppercase tracking-[0.12em] outline-none transition-colors duration-150 ${sortKey === "orderId" ? "text-fg" : "hover:text-muted"}`}
                 >
                   {t.columns.orderId}
-                  <SortArrow active={sortKey === "orderId"} dir={sortDir} />
+                  <SortIcon active={sortKey === "orderId"} dir={sortDir} />
                 </button>
               </th>
               <th scope="col" className={`${thBase} text-start`}>
@@ -158,7 +168,7 @@ export function OrdersTable() {
                   className={`inline-flex items-center gap-1.5 uppercase tracking-[0.12em] outline-none transition-colors duration-150 ${sortKey === "customer" ? "text-fg" : "hover:text-muted"}`}
                 >
                   {t.columns.customer}
-                  <SortArrow active={sortKey === "customer"} dir={sortDir} />
+                  <SortIcon active={sortKey === "customer"} dir={sortDir} />
                 </button>
               </th>
               <th scope="col" className={`${thBase} text-end`}>
@@ -168,7 +178,7 @@ export function OrdersTable() {
                   className={`inline-flex items-center gap-1.5 uppercase tracking-[0.12em] outline-none transition-colors duration-150 ${sortKey === "amount" ? "text-fg" : "hover:text-muted"}`}
                 >
                   {t.columns.amount}
-                  <SortArrow active={sortKey === "amount"} dir={sortDir} />
+                  <SortIcon active={sortKey === "amount"} dir={sortDir} />
                 </button>
               </th>
               <th scope="col" className={`${thBase} text-start`}>

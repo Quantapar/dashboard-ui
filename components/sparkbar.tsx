@@ -4,14 +4,6 @@ type SparkbarProps = {
   height?: number;
 };
 
-/**
- * Hand-coded sparkbar (no chart library).
- * Bars are normalized to the dataset's own max, so different metrics
- * (revenue, percentages, counts) all render at full height.
- * The last bar (today) is highlighted in the signature accent color.
- *
- * Decorative — already announced via the trend percentage adjacent to it.
- */
 export function Sparkbar({ data, width = 64, height = 22 }: SparkbarProps) {
   const max = Math.max(...data);
   const min = Math.min(...data);
